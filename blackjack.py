@@ -3,20 +3,18 @@ import random
 class Deck():
     suits = (chr(9829), chr(9830), chr(9824), chr(9827))
     ranks = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
-    def __init__(self, cards):
-        self.cards = cards
-    @classmethod
-    def generate_deck(cls):
-        cards = []
-        for i in range(len(cls.ranks)):
-            for j in range(len(cls.suits)):
+    def __init__(self):
+        self.cards = []
+        for i in range(len(Deck.ranks)):
+            for j in range(len(Deck.suits)):
                 point = 0
-                match i:
-                    case 12:
-                        point = (1, 11)
-                        
-                    case_:
-                        cards.append(Card((cls.ranks[i], cls.suits[j]), i + 2))
+                if i == 12:
+                    point = (1, 11)
+                elif i > 9:
+                    point = 10
+                else:
+                    point = i + 2
+                self.cards.append(Card((Deck.suits[j], Deck.ranks[i]), point))
 
 
 class Card():
@@ -70,7 +68,6 @@ class Card():
 class Entity():
     def __init__(self):
         self.cards = []
-        self.points =
     def hit(self, card: Card):
         self.cards.append(card)
     def stand(self):
@@ -90,9 +87,9 @@ def main():
         but must hit exactly one more time before standing.
         In case of a tie, the bet is returned to the player.
         The dealer stops hitting at 17.''')
-    player = Entity()
-    player.hit(Card.generate_random())
-    print(player.cards[0])
+    deck = Deck()
+    for card in deck.cards:
+        print(card) 
 
 if __name__ == "__main__":
     main()
