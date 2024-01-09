@@ -63,9 +63,24 @@ def main():
         In case of a tie, the bet is returned to the player.
         The dealer stops hitting at 17.''')
     deck = Deck()
-    deck.shuffle()
+    # deck.shuffle()
     for card in deck.cards:
         print(card)
+    s = print_cards(deck.cards)
+
+
+def print_cards(cards):
+    if len(cards) == 1:
+        return str(cards[0])
+    s = str()
+    card1 = str(cards[0]).split('\n')
+    card2 = print_cards(cards[1:]).split('\n')
+    for i in range(len(card1)):
+        s += card1[i] + card2[i] + '\n'
+    return s
+
+    
+
 
 if __name__ == "__main__":
     main()
