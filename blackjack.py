@@ -5,6 +5,7 @@ class Deck():
     ranks = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
     def __init__(self):
         self.cards = []
+        self.removed_cards = []
         for i in range(len(Deck.ranks)):
             for j in range(len(Deck.suits)):
                 point = 0
@@ -16,25 +17,11 @@ class Deck():
                     point = i + 2
                 self.cards.append(Card((Deck.suits[j], Deck.ranks[i]), point))
 
+    def shuffle(self):
+        random.shuffle(self.cards)
+
 
 class Card():
-    played_deck = []
-    suits = (chr(9829), chr(9830), chr(9824), chr(9827))
-    ranks = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
-
-    @classmethod
-    def generate_random(cls, n=1):
-        cards = []
-        for i in range(n):
-            while True:
-                try:
-                    cards.append(Card((random.choice(cls.suits), random.choice(cls.ranks))))
-                except ValueError:
-                    pass
-                else:
-                    break
-        return cards if n > 1 else cards[0]
-    
     def __init__(self, pair, point):
         self.pair = pair
         self.point = point
@@ -45,22 +32,10 @@ class Card():
 |###| 
 |_##| '''
         return f''' ___  
-|{str(self.pair[0]).ljust(2)} | 
-| {self.pair[1]} | 
-|_{str(self.pair[0]).rjust(2, '_')}| '''
+|{str(self.pair[1]).ljust(2)} | 
+| {self.pair[0]} | 
+|_{str(self.pair[1]).rjust(2, '_')}| '''
     
-    @property
-    def pair(self):
-        return self._pair
-    
-    @pair.setter
-    def pair(self, pair):
-        if pair not in Card.played_deck:
-            Card.played_deck.append(pair)
-            self._pair = pair
-        else:
-            raise ValueError('duplicates found')
-
 
     
 
@@ -88,8 +63,9 @@ def main():
         In case of a tie, the bet is returned to the player.
         The dealer stops hitting at 17.''')
     deck = Deck()
+    deck.shuffle()
     for card in deck.cards:
-        print(card) 
+        print(card)
 
 if __name__ == "__main__":
     main()
