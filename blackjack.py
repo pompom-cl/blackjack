@@ -4,6 +4,7 @@ import random
 class Deck():
     suits = (chr(9829), chr(9830), chr(9824), chr(9827))
     ranks = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
+
     def __init__(self):
         self.cards = []
         self.removed_cards = []
@@ -22,7 +23,12 @@ class Deck():
         random.shuffle(self.cards)
     
     def deal(self):
-        self.cards.pop(0)
+        self.removed_cards.append(self.cards.pop(0))
+
+    def reset(self):
+        self.cards += self.removed_cards
+        self.shuffle()
+        
 
 
 
