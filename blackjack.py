@@ -1,3 +1,4 @@
+import argparse
 import random
 
 class Deck():
@@ -68,11 +69,14 @@ class Entity():
             
 
 class Player(Entity):
-    ...
+    ... #TODO
+
+class Dealer(Entity):
+    ... #TODO
 
 
 def main():
-    print('Blackjack, by Al Sweigart al@inventwithpython.com')
+    print('Welcome to Blackjack (inspired by Al Sweigart)')
     print('''
     Rules:
         Try to get as close to 21 without going over.
@@ -88,6 +92,7 @@ def main():
     deck = Deck()
     deck.shuffle()
     player = Player()
+    dealer = Dealer()
     player.hit(deck)
     player.hit(deck)
     print(print_cards(player.cards))
