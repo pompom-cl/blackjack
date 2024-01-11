@@ -76,7 +76,12 @@ class Dealer(Entity):
 
 
 def main():
+    parser = argparse.ArgumentParser(prog='blackjack', description='A gambling game')
+    parser.add_argument('-m', '--money', default=1000, help='player\'s (and dealer)\'s starting money', type=int)
+    args = parser.parse_args()
+
     print('Welcome to Blackjack (inspired by Al Sweigart)')
+    print(args.money)
     print('''
     Rules:
         Try to get as close to 21 without going over.
