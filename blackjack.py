@@ -63,7 +63,8 @@ class Entity():
                 else:
                     points[n] += self.cards[i].point
         print(points)
-        return max(points) if max(points) < 21 else min(points)
+        max_point =max(points) 
+        return max_point if max_point < 21 else min(points)
             
 
 class Player(Entity):
