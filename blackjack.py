@@ -19,6 +19,10 @@ class Deck():
 
     def shuffle(self):
         random.shuffle(self.cards)
+    
+    def deal(self):
+        self.cards.pop(0)
+
 
 
 class Card():
@@ -37,16 +41,28 @@ class Card():
 |_{str(self.pair[1]).rjust(2, '_')}| '''
     
 
-    
-
-
 class Entity():
     def __init__(self):
         self.cards = []
-    def hit(self, card: Card):
-        self.cards.append(card)
+        self.total_points = 0
+
+    def hit(self, deck: Deck):
+        self.cards.append(deck.cards[0])
+        deck.deal()
+
     def stand(self):
         ...
+
+    def calculate_points(self):
+        points = 0
+        for i in range(len(self.cards)):
+            if self.cards[i].pair[1] == 'A':
+                points += 11 if self.total_points + 11 #TODO FIXING ACE points 11 or 1
+            
+
+class Player(Entity):
+    ...
+
 
 def main():
     print('Blackjack, by Al Sweigart al@inventwithpython.com')
@@ -63,10 +79,11 @@ def main():
         In case of a tie, the bet is returned to the player.
         The dealer stops hitting at 17.''')
     deck = Deck()
-    # deck.shuffle()
-    for card in deck.cards:
-        print(card)
-    s = print_cards(deck.cards)
+    deck.shuffle()
+    player = Player()
+    player.hit(deck)
+    player.hit(deck)
+    print(print_cards(player.cards))
 
 
 def print_cards(cards):
