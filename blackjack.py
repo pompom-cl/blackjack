@@ -1,15 +1,15 @@
 import argparse
 import random
 
-class Deck():
-    suits = (chr(9829), chr(9830), chr(9824), chr(9827))
-    ranks = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
+SUITS = (chr(9829), chr(9830), chr(9824), chr(9827)) # '♥'.'♦'.'♠'.'♣'
+RANKS = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
 
+class Deck():
     def __init__(self):
         self.cards = []
         self.removed_cards = []
-        for i in range(len(Deck.ranks)):
-            for j in range(len(Deck.suits)):
+        for i in range(len(RANKS)):
+            for j in range(len(SUITS)):
                 point = 0
                 if i == 12:
                     point = (1, 11)
@@ -17,7 +17,7 @@ class Deck():
                     point = 10
                 else:
                     point = i + 2
-                self.cards.append(Card((Deck.suits[j], Deck.ranks[i]), point))
+                self.cards.append(Card((SUITS[j], RANKS[i]), point))
 
     def shuffle(self):
         random.shuffle(self.cards)
@@ -33,7 +33,7 @@ class Deck():
 
 
 class Card():
-    def __init__(self, pair, point):
+    def __init__(self, pair: tuple, point):
         self.pair = pair
         self.point = point
     def __str__(self, hide=False):
@@ -46,6 +46,18 @@ class Card():
 |{str(self.pair[1]).ljust(2)} | 
 | {self.pair[0]} | 
 |_{str(self.pair[1]).rjust(2, '_')}| '''
+    
+    @property
+    def pair(self):
+        return self._pair
+    
+    @pair.setter
+    def pair(self, pair):
+        if pair[0] in SUITS and pair[1] in RANKS:
+            self._pair = pair
+        else:
+            raise ValueError("Invalid Card")
+
     
 
 class Entity():
@@ -88,26 +100,31 @@ def main():
 
     print('Welcome to Blackjack (inspired by Al Sweigart)')
     print(args.money)
-    print('''
-    Rules:
-        Try to get as close to 21 without going over.
-        Kings, Queens, and Jacks are worth 10 points.
-        Aces are worth 1 or 11 points.
-        Cards 2 through 10 are worth their face value.
-        (H)it to take another card.
-        (S)tand to stop taking cards.
-        On your first play, you can (D)ouble down to increase your bet
-        but must hit exactly one more time before standing.
-        In case of a tie, the bet is returned to the player.
-        The dealer stops hitting at 17.''')
+    # print('''
+    # Rules:
+    #     Try to get as close to 21 without going over.
+    #     Kings, Queens, and Jacks are worth 10 points.
+    #     Aces are worth 1 or 11 points.
+    #     Cards 2 through 10 are worth their face value.
+    #     (H)it to take another card.
+    #     (S)tand to stop taking cards.
+    #     On your first play, you can (D)ouble down to increase your bet
+    #     but must hit exactly one more time before standing.
+    #     In case of a tie, the bet is returned to the player.
+    #     The dealer stops hitting at 17.''')
     deck = Deck()
     deck.shuffle()
     player = Player()
-    dealer = Dealer()
-    player.hit(deck)
-    player.hit(deck)
-    print(print_cards(player.cards))
-    print(player.calculate_points())
+    # dealer = Dealer()
+    # player.hit(deck)
+    # player.hit(deck)
+    # print(print_cards(player.cards))
+    # print(player.calculate_points())
+    
+    testing_card_1 = Card((chr(9829), 2), 2)
+    testing_card_2 = Card((chr(9830), 'Q'), 10)
+    print(print_cards([testing_card_1, testing_card_2]))
+
 
 
 def print_cards(cards):
