@@ -54,10 +54,16 @@ class Entity():
         ...
 
     def calculate_points(self):
-        points = 0
-        for i in range(len(self.cards)):
-            if self.cards[i].pair[1] == 'A':
-                points += 11 if self.total_points + 11 #TODO FIXING ACE points 11 or 1
+        points = []
+        for n in range(2):
+            points.append(0)
+            for i in range(len(self.cards)):
+                if self.cards[i].pair[1] == 'A':
+                    points[n] += 1 if n == 0 else 11
+                else:
+                    points[n] += self.cards[i].point
+        print(points)
+        return max(points) if max(points) < 21 else min(points)
             
 
 class Player(Entity):
@@ -84,6 +90,7 @@ def main():
     player.hit(deck)
     player.hit(deck)
     print(print_cards(player.cards))
+    print(player.calculate_points())
 
 
 def print_cards(cards):
