@@ -140,13 +140,14 @@ def main():
 
     while True:
         print(f"DEALER: {dealer.total_points}")
-        print(print_cards(dealer.cards, hide=1))
+        print(print_cards(dealer.cards))
         print(f"PLAYER: {player.total_points}")
         print(print_cards(player.cards))
+
         break
 
 
-def print_cards(cards, hide: int=0):
+def print_cards(cards):
     if len(cards) == 1:
         return str(cards[0])
     s = str()
