@@ -5,9 +5,11 @@ SUITS = (chr(9829), chr(9830), chr(9824), chr(9827)) # '♥'.'♦'.'♠'.'♣'
 RANKS = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
 
 class Deck():
-    def __init__(self):
-        self.cards = []
-        self.removed_cards = []
+    cards = []
+    removed_cards = []
+
+    @classmethod
+    def generate_deck(cls):
         for i in range(len(RANKS)):
             for j in range(len(SUITS)):
                 point = 0
@@ -17,17 +19,20 @@ class Deck():
                     point = 10
                 else:
                     point = i + 2
-                self.cards.append(Card((SUITS[j], RANKS[i]), point))
+                cls.cards.append(Card((SUITS[j], RANKS[i]), point))
 
-    def shuffle(self):
-        random.shuffle(self.cards)
-    
-    def deal(self):
-        self.removed_cards.append(self.cards.pop(0))
-
-    def reset(self):
-        self.cards += self.removed_cards
-        self.shuffle()
+    @classmethod
+    def shuffle(cls):
+        random.shuffle(cls.cards)
+        
+    @classmethod
+    def deal(cls):
+        cls.removed_cards.append(cls.cards.pop(0))
+        
+    @classmethod
+    def reset(cls):
+        cls.cards += cls.removed_cards
+        cls.shuffle()
         
 
 
@@ -69,9 +74,9 @@ class Entity():
         self.hidden
         self.money = money
 
-    def hit(self, deck: Deck):
-        self.cards.append(deck.cards[0])
-        deck.deal()
+    def hit(self):
+        self.cards.append(Deck.cards[0])
+        Deck.deal()
 
     def stand(self):
         ...
@@ -107,12 +112,25 @@ class Entity():
             
 
 class Player(Entity):
-    ... #TODO
+    def get_action(self):
+        while True:
+            action = input('> ').strip().lower()
+            print()
+            match action:
+                case 'h':
+                    self.hit()
+                    break
+                case 's':
+                    self.stand()
+                    break
+                case 'd':
+                    self.double()
+                    break
+                case _:
+                    pass
 
 class Dealer(Entity):
-    def hide(self):
-        self.cards[0].hide = True
-    ... #TODO
+    ...
 
 
 def main():
@@ -135,18 +153,18 @@ def main():
         In case of a tie, the bet is returned to the player.
         The dealer stops hitting at 17.
     ''')
-    deck = Deck()
-    deck.shuffle()
-    player = create_entity(deck, money)
-    dealer = create_entity(deck, dealer=True)
+    Deck.generate_deck()
+    Deck.shuffle()
+    player = create_entity(money)
+    dealer = create_entity(dealer=True)
+    print(f"MONNEY: {player.money}")
 
-    while True:
-        print(f"DEALER: {dealer.total_points}")
-        print(print_cards(dealer.cards))
-        print(f"PLAYER: {player.total_points}")
-        print(print_cards(player.cards))
-        print(f"MONNEY: {player.money}")
-        break
+    while player.total_points <= 21:
+        players = {'player': player, 'dealer': dealer}
+        print_stats(players)
+        print('\n(H)it, (S)tand, (D)ouble down')
+        player.get_action()
+    
 
 
 def print_cards(cards):
@@ -160,13 +178,18 @@ def print_cards(cards):
     return s
 
 
-def create_entity(deck, money=0, dealer=False):
-    entity = Entity(None) if dealer else Entity(money)
-    entity.hit(deck)
-    entity.hit(deck)
+def create_entity(money=0, dealer=False):
+    entity = Entity(None) if dealer else Player(money)
+    entity.hit()
+    entity.hit()
     if dealer:
         entity.cards[0].hide = True
     return entity
+
+def print_stats(players):
+    for player in players:
+        print(f"{player.upper()}: {players[player].total_points}")
+        print(print_cards(players[player].cards))
 
 
 if __name__ == "__main__":
