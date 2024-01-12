@@ -62,11 +62,12 @@ class Card():
     
 
 class Entity():
-    def __init__(self):
+    def __init__(self, money):
         self.cards = []
         self.total_points
         self.actions = []
         self.hidden
+        self.money = money
 
     def hit(self, deck: Deck):
         self.cards.append(deck.cards[0])
@@ -118,6 +119,7 @@ def main():
     parser = argparse.ArgumentParser(prog='blackjack', description='A gambling game')
     parser.add_argument('-m', '--money', default=1000, help='player\'s (and dealer)\'s starting money', type=int)
     args = parser.parse_args()
+    money = args.money
 
     print('Welcome to Blackjack (inspired by Al Sweigart)')
     print('''
@@ -135,7 +137,7 @@ def main():
     ''')
     deck = Deck()
     deck.shuffle()
-    player = create_entity(deck)
+    player = create_entity(deck, money)
     dealer = create_entity(deck, dealer=True)
 
     while True:
@@ -143,7 +145,7 @@ def main():
         print(print_cards(dealer.cards))
         print(f"PLAYER: {player.total_points}")
         print(print_cards(player.cards))
-
+        print(f"MONNEY: {player.money}")
         break
 
 
@@ -158,8 +160,8 @@ def print_cards(cards):
     return s
 
 
-def create_entity(deck, dealer=False):
-    entity = Entity()
+def create_entity(deck, money=0, dealer=False):
+    entity = Entity(None) if dealer else Entity(money)
     entity.hit(deck)
     entity.hit(deck)
     if dealer:
