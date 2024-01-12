@@ -158,7 +158,7 @@ def main():
     Deck.shuffle()
     player = create_entity(money)
     dealer = create_entity(dealer=True)
-    print(f"MONNEY: {player.money}")
+    print(f"MONEY: {player.money}")
 
     while player.total_points <= 21:
         players = {'dealer': dealer, 'player': player}
