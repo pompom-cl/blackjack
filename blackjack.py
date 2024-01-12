@@ -36,8 +36,6 @@ class Deck():
         cls.shuffle()
         
 
-
-
 class Card():
     def __init__(self, pair: tuple, point):
         self.pair = pair
@@ -65,7 +63,6 @@ class Card():
         else:
             raise ValueError("Invalid Card")
 
-    
 
 class Entity():
     def __init__(self, money):
@@ -74,16 +71,20 @@ class Entity():
         self.actions = []
         self.hidden
         self.money = money
+        self.winning = False
 
     def hit(self):
+        self.actions.append('hit')
         self.cards.append(Deck.cards[0])
         Deck.deal()
 
-    def stand(self):
-        ...
+    def stand(self, players):
+        self.actions.append('stand')
+        players.pop(list(players.keys())[0])
+
 
     def double(self):
-        ...
+        self.actions.append('double')
 
     def calculate_points(self):
         points = []
@@ -113,7 +114,7 @@ class Entity():
             
 
 class Player(Entity):
-    def get_action(self):
+    def get_action(self, players):
         while True:
             action = input('> ').strip().lower()
             print()
@@ -122,7 +123,7 @@ class Player(Entity):
                     self.hit()
                     break
                 case 's':
-                    self.stand()
+                    self.stand(players)
                     break
                 case 'd':
                     self.double()
@@ -155,17 +156,20 @@ def main():
         The dealer stops hitting at 17.
     ''')
     Deck.generate_deck()
-    Deck.shuffle()
+    # Deck.shuffle()
     player = create_entity(money)
     dealer = create_entity(dealer=True)
     print(f"MONEY: {player.money}")
+    bet = get_bet(money)
 
-    while player.total_points <= 21:
-        players = {'dealer': dealer, 'player': player}
-        bet = get_bet(money)
+    while True:
+        players = {'player': player, 'dealer': dealer}
         print_stats(players)
         print('\n(H)it, (S)tand, (D)ouble down')
-        player.get_action()
+        player.get_action(players)
+        
+        if player.total_points > 21:
+            break
     
 
 
