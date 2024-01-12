@@ -66,6 +66,7 @@ class Entity():
         self.cards = []
         self.total_points
         self.actions = []
+        self.hidden
 
     def hit(self, deck: Deck):
         self.cards.append(deck.cards[0])
@@ -91,7 +92,16 @@ class Entity():
     
     @property
     def total_points(self):
+        if self.hidden:
+            return '??'
         return self.calculate_points()
+    
+    @property
+    def hidden(self):
+        for card in self.cards:
+            if card.hide:
+                return True
+        return False
     
             
 
@@ -99,6 +109,8 @@ class Player(Entity):
     ... #TODO
 
 class Dealer(Entity):
+    def hide(self):
+        self.cards[0].hide = True
     ... #TODO
 
 
@@ -123,19 +135,14 @@ def main():
     ''')
     deck = Deck()
     deck.shuffle()
-    player = Player()
-    player.hit(deck)
-    player.hit(deck)
-    dealer = Dealer()
-    dealer.hit(deck)
-    dealer.hit(deck)
-
-    print(f"DEALER: {dealer.total_points}")
-    print(print_cards(dealer.cards, hide=1))
-    print(f"PLAYER: {player.total_points}")
-    print(print_cards(player.cards))
+    player = create_entity(deck)
+    dealer = create_entity(deck, dealer=True)
 
     while True:
+        print(f"DEALER: {dealer.total_points}")
+        print(print_cards(dealer.cards, hide=1))
+        print(f"PLAYER: {player.total_points}")
+        print(print_cards(player.cards))
         break
 
 
@@ -149,6 +156,14 @@ def print_cards(cards, hide: int=0):
         s += card1[i] + card2[i] + '\n'
     return s
 
+
+def create_entity(deck, dealer=False):
+    entity = Entity()
+    entity.hit(deck)
+    entity.hit(deck)
+    if dealer:
+        entity.cards[0].hide = True
+    return entity
 
 
 if __name__ == "__main__":
