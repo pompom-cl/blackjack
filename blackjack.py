@@ -4,6 +4,7 @@ import sys
 
 SUITS = (chr(9829), chr(9830), chr(9824), chr(9827)) # '♥'.'♦'.'♠'.'♣'
 RANKS = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
+STARTING_CARDS = 2
 
 class Deck():
     cards = []
@@ -73,6 +74,7 @@ class Entity():
         self.money = money
         self.winning = False
         self.turn = False
+        self.bet = 0
 
     def hit(self):
         self.actions.append('hit')
@@ -82,10 +84,6 @@ class Entity():
     def stand(self):
         self.actions.append('stand')
         self.turn = False
-
-
-    def double(self):
-        self.actions.append('double')
 
     def calculate_points(self):
         points = []
@@ -115,8 +113,10 @@ class Entity():
             
 
 class Player(Entity):
-    def get_action(self, players):
+    def get_action(self):
         while True:
+            print()
+            print(f'BET: {self.bet}\n(H)it, (S)tand, (D)ouble down') if len(self.actions) == STARTING_CARDS else print('\n(H)it, (S)tand')
             action = input('> ').strip().lower()
             print()
             match action:
@@ -131,6 +131,13 @@ class Player(Entity):
                     break
                 case _:
                     pass
+
+
+    def double(self):
+        self.bet *= 2
+        if len(self.actions) == STARTING_CARDS:
+            self.hit()
+        self.stand()
 
 class Dealer(Entity):
     ...
@@ -160,16 +167,16 @@ def main():
     # Deck.shuffle()
     player = create_entity(money)
     dealer = create_entity(dealer=True)
+
     print(f"MONEY: {player.money}")
     bet = get_bet(money)
-
     players = {'player': player, 'dealer': dealer}
     for p in players:
+        players[p].bet = bet
         players[p].turn = True
         while players[p].turn:
             print_stats({'player': player, 'dealer': dealer})
-            print('\n(H)it, (S)tand, (D)ouble down')
-            players[p].get_action(players)
+            players[p].get_action()
         
             if players[p].total_points > 21:
                 break
@@ -189,8 +196,8 @@ def print_cards(cards):
 
 def create_entity(money=0, dealer=False):
     entity = Entity(None) if dealer else Player(money)
-    entity.hit()
-    entity.hit()
+    for i in range(STARTING_CARDS):
+        entity.hit()
     if dealer:
         entity.cards[0].hide = True
     return entity
