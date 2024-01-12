@@ -36,8 +36,9 @@ class Card():
     def __init__(self, pair: tuple, point):
         self.pair = pair
         self.point = point
-    def __str__(self, hide=False):
-        if hide:
+        self.hide = False
+    def __str__(self):
+        if self.hide:
              return f''' ___  
 |## | 
 |###| 
@@ -63,13 +64,17 @@ class Card():
 class Entity():
     def __init__(self):
         self.cards = []
-        self.total_points = 0
+        self.total_points
+        self.actions = []
 
     def hit(self, deck: Deck):
         self.cards.append(deck.cards[0])
         deck.deal()
 
     def stand(self):
+        ...
+
+    def double(self):
         ...
 
     def calculate_points(self):
@@ -81,9 +86,13 @@ class Entity():
                     points[n] += 1 if n == 0 else 11
                 else:
                     points[n] += self.cards[i].point
-        print(points)
         max_point =max(points) 
         return max_point if max_point < 21 else min(points)
+    
+    @property
+    def total_points(self):
+        return self.calculate_points()
+    
             
 
 class Player(Entity):
@@ -99,35 +108,38 @@ def main():
     args = parser.parse_args()
 
     print('Welcome to Blackjack (inspired by Al Sweigart)')
-    print(args.money)
-    # print('''
-    # Rules:
-    #     Try to get as close to 21 without going over.
-    #     Kings, Queens, and Jacks are worth 10 points.
-    #     Aces are worth 1 or 11 points.
-    #     Cards 2 through 10 are worth their face value.
-    #     (H)it to take another card.
-    #     (S)tand to stop taking cards.
-    #     On your first play, you can (D)ouble down to increase your bet
-    #     but must hit exactly one more time before standing.
-    #     In case of a tie, the bet is returned to the player.
-    #     The dealer stops hitting at 17.''')
+    print('''
+    Rules:
+        Try to get as close to 21 without going over.
+        Kings, Queens, and Jacks are worth 10 points.
+        Aces are worth 1 or 11 points.
+        Cards 2 through 10 are worth their face value.
+        (H)it to take another card.
+        (S)tand to stop taking cards.
+        On your first play, you can (D)ouble down to increase your bet
+        but must hit exactly one more time before standing.
+        In case of a tie, the bet is returned to the player.
+        The dealer stops hitting at 17.
+    ''')
     deck = Deck()
     deck.shuffle()
     player = Player()
-    # dealer = Dealer()
-    # player.hit(deck)
-    # player.hit(deck)
-    # print(print_cards(player.cards))
-    # print(player.calculate_points())
-    
-    testing_card_1 = Card((chr(9829), 2), 2)
-    testing_card_2 = Card((chr(9830), 'Q'), 10)
-    print(print_cards([testing_card_1, testing_card_2]))
+    player.hit(deck)
+    player.hit(deck)
+    dealer = Dealer()
+    dealer.hit(deck)
+    dealer.hit(deck)
+
+    print(f"DEALER: {dealer.total_points}")
+    print(print_cards(dealer.cards, hide=1))
+    print(f"PLAYER: {player.total_points}")
+    print(print_cards(player.cards))
+
+    while True:
+        break
 
 
-
-def print_cards(cards):
+def print_cards(cards, hide: int=0):
     if len(cards) == 1:
         return str(cards[0])
     s = str()
@@ -137,7 +149,6 @@ def print_cards(cards):
         s += card1[i] + card2[i] + '\n'
     return s
 
-    
 
 
 if __name__ == "__main__":
