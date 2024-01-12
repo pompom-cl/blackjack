@@ -1,5 +1,6 @@
 import argparse
 import random
+import sys
 
 SUITS = (chr(9829), chr(9830), chr(9824), chr(9827)) # '♥'.'♦'.'♠'.'♣'
 RANKS = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
@@ -160,7 +161,8 @@ def main():
     print(f"MONNEY: {player.money}")
 
     while player.total_points <= 21:
-        players = {'player': player, 'dealer': dealer}
+        players = {'dealer': dealer, 'player': player}
+        bet = get_bet(money)
         print_stats(players)
         print('\n(H)it, (S)tand, (D)ouble down')
         player.get_action()
@@ -190,6 +192,17 @@ def print_stats(players):
     for player in players:
         print(f"{player.upper()}: {players[player].total_points}")
         print(print_cards(players[player].cards))
+
+def get_bet(max: int) -> int:
+    while True:
+        bet = input('How much do you want to bet?\n> ')
+        try:
+            bet = int(bet)
+        except ValueError:
+            pass
+        else:
+            if bet > 0 and bet <= max:
+                return bet
 
 
 if __name__ == "__main__":
