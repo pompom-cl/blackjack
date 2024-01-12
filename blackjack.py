@@ -72,15 +72,16 @@ class Entity():
         self.hidden
         self.money = money
         self.winning = False
+        self.turn = False
 
     def hit(self):
         self.actions.append('hit')
         self.cards.append(Deck.cards[0])
         Deck.deal()
 
-    def stand(self, players):
+    def stand(self):
         self.actions.append('stand')
-        players.pop(list(players.keys())[0])
+        self.turn = False
 
 
     def double(self):
@@ -123,7 +124,7 @@ class Player(Entity):
                     self.hit()
                     break
                 case 's':
-                    self.stand(players)
+                    self.stand()
                     break
                 case 'd':
                     self.double()
@@ -162,14 +163,16 @@ def main():
     print(f"MONEY: {player.money}")
     bet = get_bet(money)
 
-    while True:
-        players = {'player': player, 'dealer': dealer}
-        print_stats(players)
-        print('\n(H)it, (S)tand, (D)ouble down')
-        player.get_action(players)
+    players = {'player': player, 'dealer': dealer}
+    for p in players:
+        players[p].turn = True
+        while players[p].turn:
+            print_stats({'player': player, 'dealer': dealer})
+            print('\n(H)it, (S)tand, (D)ouble down')
+            players[p].get_action(players)
         
-        if player.total_points > 21:
-            break
+            if players[p].total_points > 21:
+                break
     
 
 
