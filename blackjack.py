@@ -1,6 +1,7 @@
 import argparse
 import random
 import sys
+import time
 
 SUITS = (chr(9829), chr(9830), chr(9824), chr(9827)) # '♥'.'♦'.'♠'.'♣'
 RANKS = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
@@ -140,7 +141,16 @@ class Player(Entity):
         self.stand()
 
 class Dealer(Entity):
-    ...
+    def get_action(self):
+        self.cards[0].hide = False
+        action = random.choice(['hit', 'stand'])
+        match action:
+            case 'hit':
+                self.hit()
+            case 'stand':
+                self.stand()
+        time.sleep(2)
+        
 
 
 def main():
@@ -195,7 +205,7 @@ def print_cards(cards):
 
 
 def create_entity(money=0, dealer=False):
-    entity = Entity(None) if dealer else Player(money)
+    entity = Dealer(None) if dealer else Player(money)
     for i in range(STARTING_CARDS):
         entity.hit()
     if dealer:
