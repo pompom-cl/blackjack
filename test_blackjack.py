@@ -8,4 +8,14 @@ def test_print_cards():
     assert blackjack.print_cards([testing_card_2, testing_card_1]) == ' ___   ___  \n|Q  | |2  | \n| ♦ | | ♥ | \n|__Q| |__2| \n'
     #TODO error checking
 
-#TODO create_entity
+def test_create_entity():
+    ...
+
+def test_print_stats():
+    ...
+
+def test_get_bet():
+    ...
+
+def find_winner():
+    ...
