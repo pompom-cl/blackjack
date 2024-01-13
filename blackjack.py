@@ -142,14 +142,35 @@ class Player(Entity):
 
 class Dealer(Entity):
     def get_action(self):
-        self.cards[0].hide = False
-        action = random.choice(['hit', 'stand'])
+        self.unhide()
+        time.sleep(1)
+        actions = {}
+        point_1 = 11 # hit
+        point_2 = random.randint(14, 15)
+        point_3 = random.randint(18, 19)
+        
+        if self.total_points < point_1:
+            actions['hit'] = 0.91
+            actions['stand'] = 0.09
+        elif self.total_points < point_2:
+            actions['hit'] = 0.63
+            actions['stand'] = 0.37
+        elif self.total_points < point_3:
+            actions['hit'] = 0.27
+            actions['stand'] = 0.73
+        else:
+            actions['hit'] = 0.09
+            actions['stand'] = 0.91
+        action = random.choices(list(actions.keys()), list(actions.values()), k=1)[0]
+        print(action)
         match action:
             case 'hit':
                 self.hit()
             case 'stand':
                 self.stand()
-        time.sleep(2)
+
+    def unhide(self):
+        self.cards[0].hide = False if self.cards[0].hide else False
         
 
 
@@ -178,16 +199,22 @@ def main():
     player = create_entity(money)
     dealer = create_entity(dealer=True)
 
+
+    print(f"\nGAME ONE")
+
     print(f"MONEY: {player.money}")
     bet = get_bet(money)
+
+
     players = {'player': player, 'dealer': dealer}
     for p in players:
         players[p].bet = bet
         players[p].turn = True
+        print_stats({'player': player, 'dealer': dealer})
         while players[p].turn:
-            print_stats({'player': player, 'dealer': dealer})
+            print(f"{p.upper()} TURNS:")
             players[p].get_action()
-        
+            print_stats({'player': player, 'dealer': dealer})
             if players[p].total_points > 21:
                 break
     
