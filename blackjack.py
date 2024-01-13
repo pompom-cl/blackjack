@@ -146,7 +146,6 @@ class Player(Entity):
 class Dealer(Entity):
     def get_action(self):
         self.unhide()
-        time.sleep(1)
         actions = {}
         point_1 = 11 # hit
         point_2 = random.randint(14, 15)
@@ -216,7 +215,9 @@ def main():
         print_stats({'player': player, 'dealer': dealer})
         while players[p].turn:
             print(f"{p.upper()} TURNS:")
+            time.sleep(0.5)
             players[p].get_action()
+            time.sleep(1)
             print_stats({'player': player, 'dealer': dealer})
 
     find_winner(**players)
