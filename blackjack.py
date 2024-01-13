@@ -73,14 +73,17 @@ class Entity():
         self.actions = []
         self.hidden
         self.money = money
-        self.winning = False
         self.turn = False
         self.bet = 0
 
     def hit(self):
-        self.actions.append('hit')
-        self.cards.append(Deck.cards[0])
-        Deck.deal()
+        first_card = Deck.cards[0]
+        if self.total_points + first_card.point > 21:
+            self.stand()
+        else:
+            self.actions.append('hit')
+            self.cards.append(Deck.cards[0])
+            Deck.deal()
 
     def stand(self):
         self.actions.append('stand')
@@ -150,8 +153,8 @@ class Dealer(Entity):
         point_3 = random.randint(18, 19)
         
         if self.total_points < point_1:
-            actions['hit'] = 0.91
-            actions['stand'] = 0.09
+            actions['hit'] = 1
+            actions['stand'] = 0
         elif self.total_points < point_2:
             actions['hit'] = 0.63
             actions['stand'] = 0.37
@@ -160,7 +163,7 @@ class Dealer(Entity):
             actions['stand'] = 0.73
         else:
             actions['hit'] = 0.09
-            actions['stand'] = 0.91
+            actions['stand'] = 0.99
         action = random.choices(list(actions.keys()), list(actions.values()), k=1)[0]
         print(action)
         match action:
@@ -215,8 +218,8 @@ def main():
             print(f"{p.upper()} TURNS:")
             players[p].get_action()
             print_stats({'player': player, 'dealer': dealer})
-            if players[p].total_points > 21:
-                break
+
+    find_winner(**players)
     
 
 
@@ -254,6 +257,16 @@ def get_bet(max: int) -> int:
         else:
             if bet > 0 and bet <= max:
                 return bet
+            
+
+def find_winner(player, dealer):
+    if player.total_points > dealer.total_points:
+        print('PLAYER WIN')
+    elif player.total_points < dealer.total_points:
+        print('PLAYER LOSE')
+    else:
+        print('DRAW')
+    
 
 
 if __name__ == "__main__":
