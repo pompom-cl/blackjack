@@ -1,6 +1,5 @@
 import argparse
 import random
-import sys
 import time
 
 SUITS = (chr(9829), chr(9830), chr(9824), chr(9827)) # '♥'.'♦'.'♠'.'♣'
