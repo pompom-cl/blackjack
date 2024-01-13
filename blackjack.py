@@ -76,13 +76,9 @@ class Entity():
         self.bet = 0
 
     def hit(self):
-        first_card = Deck.cards[0]
-        if self.total_points + first_card.point > 21:
-            self.stand()
-        else:
-            self.actions.append('hit')
-            self.cards.append(Deck.cards[0])
-            Deck.deal()
+        self.actions.append('hit')
+        self.cards.append(Deck.cards[0])
+        Deck.deal()
 
     def stand(self):
         self.actions.append('stand')
@@ -216,8 +212,12 @@ def main():
             print(f"{p.upper()} TURNS:")
             time.sleep(0.5)
             players[p].get_action()
-            time.sleep(1)
+            time.sleep(0.5)
             print_stats({'player': player, 'dealer': dealer})
+            
+            if players[p].total_points > 21:
+                players[p].stand()
+                players[p].lose = True
 
     find_winner(**players)
     
@@ -260,6 +260,7 @@ def get_bet(max: int) -> int:
             
 
 def find_winner(player, dealer):
+    # TODO add error if more than 21
     if player.total_points > dealer.total_points:
         print('PLAYER WIN')
     elif player.total_points < dealer.total_points:
