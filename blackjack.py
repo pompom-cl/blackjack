@@ -5,6 +5,7 @@ import time
 SUITS = (chr(9829), chr(9830), chr(9824), chr(9827)) # '♥'.'♦'.'♠'.'♣'
 RANKS = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
 STARTING_CARDS = 2
+POINTS = 21
 
 class Deck():
     cards = []
@@ -74,6 +75,7 @@ class Entity():
         self.money = money
         self.turn = False
         self.bet = 0
+        self.lose = False
 
     def hit(self):
         self.actions.append('hit')
@@ -94,7 +96,7 @@ class Entity():
                 else:
                     points[n] += self.cards[i].point
         max_point =max(points) 
-        return max_point if max_point < 21 else min(points)
+        return max_point if max_point < POINTS else min(points)
     
     @property
     def total_points(self):
@@ -215,11 +217,11 @@ def main():
             time.sleep(0.5)
             print_stats({'player': player, 'dealer': dealer})
             
-            if players[p].total_points > 21:
+            if players[p].total_points > POINTS:
                 players[p].stand()
                 players[p].lose = True
 
-    find_winner(**players)
+    find_winner(players)
     
 
 
@@ -259,15 +261,15 @@ def get_bet(max: int) -> int:
                 return bet
             
 
-def find_winner(player, dealer):
-    # TODO add error if more than 21
-    if player.total_points > dealer.total_points:
-        print('PLAYER WIN')
-    elif player.total_points < dealer.total_points:
-        print('PLAYER LOSE')
-    else:
-        print('DRAW')
+def find_winner(players):
+    total_points = []
+    for p in players:
+        total_points.append(players[p].total_points)
+        if players[p].lose:
+            return p
     
+    max_points = max(players, key=lambda p: players[p].total_points)
+    return max_points
 
 
 if __name__ == "__main__":
