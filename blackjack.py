@@ -35,6 +35,8 @@ class Deck():
     @classmethod
     def reset(cls):
         cls.cards += cls.removed_cards
+        for card in cls.cards:
+            card.hide = False
         cls.shuffle()
         
 
@@ -72,10 +74,10 @@ class Entity():
         self.total_points
         self.actions = []
         self.hidden
-        self.money = money
         self.turn = False
         self.bet = 0
         self.lose = False
+        self.money = money
 
     def hit(self):
         self.actions.append('hit')
@@ -114,10 +116,16 @@ class Entity():
             
 
 class Player(Entity):
+    def new_game(self):
+        self.lose = False
+        self.actions = []
+        self.cards = []
+        for i in range(STARTING_CARDS):
+            self.hit()
+
     def get_action(self):
         while True:
-            print()
-            print(f'BET: {self.bet}\n(H)it, (S)tand, (D)ouble down') if len(self.actions) == STARTING_CARDS else print('\n(H)it, (S)tand')
+            print(f'BET: {self.bet}\n(H)it, (S)tand, (D)ouble down') if len(self.actions) == STARTING_CARDS else print('(H)it, (S)tand')
             action = input('> ').strip().lower()
             print()
             match action:
@@ -128,19 +136,28 @@ class Player(Entity):
                     self.stand()
                     break
                 case 'd':
-                    self.double()
-                    break
+                    if len(self.actions) == STARTING_CARDS:
+                        self.double()
+                        break
+                    print("Cannot do double!")
                 case _:
-                    pass
+                    print("Invalid action!")
 
 
     def double(self):
         self.bet *= 2
-        if len(self.actions) == STARTING_CARDS:
-            self.hit()
+        self.hit()
         self.stand()
 
 class Dealer(Entity):
+    def new_game(self):
+        self.lose = False
+        self.actions = []
+        self.cards = []
+        for i in range(STARTING_CARDS):
+            self.hit()
+        self.cards[0].hide = True
+
     def get_action(self):
         self.unhide()
         actions = {}
@@ -194,35 +211,47 @@ def main():
         The dealer stops hitting at 17.
     ''')
     Deck.generate_deck()
-    # Deck.shuffle()
-    player = create_entity(money)
-    dealer = create_entity(dealer=True)
+    player = Player(money)
+    dealer = Dealer(None)
 
 
-    print(f"\nGAME ONE")
+    game = 1
+    while True:
+        Deck.reset()
+        player.new_game()
+        dealer.new_game()
+        print(f"\nGAME {game}")
 
-    print(f"MONEY: {player.money}")
-    bet = get_bet(money)
+        print(f"MONEY: {player.money}\n")
 
-
-    players = {'player': player, 'dealer': dealer}
-    for p in players:
-        players[p].bet = bet
-        players[p].turn = True
-        print_stats({'player': player, 'dealer': dealer})
-        while players[p].turn:
-            print(f"{p.upper()} TURNS:")
-            time.sleep(0.5)
-            players[p].get_action()
-            time.sleep(0.5)
+        players = {'player': player, 'dealer': dealer}
+        bet = get_bet(player.money)
+        if bet == None:
+            print(f"You brought home {player.money}")
+            break
+        for p in players:
+            players[p].bet = bet
+            players[p].turn = True
             print_stats({'player': player, 'dealer': dealer})
-            
-            if players[p].total_points > POINTS:
-                players[p].stand()
-                players[p].lose = True
+            while players[p].turn:
+                print(f"{p.upper()} TURNS:")
+                time.sleep(0.5)
+                players[p].get_action()
+                time.sleep(0.5)
+                print_stats({'player': player, 'dealer': dealer})
+                
+                if players[p].total_points > POINTS:
+                    players[p].stand()
+                    players[p].lose = True
 
-    find_winner(players)
-    
+        find_loser(players)
+        finishing_game(players, bet)
+        if player.money <= 0:
+            print("You run out of money to bet!")
+            break
+        game += 1
+
+    print("Thank You For Playing!")
 
 
 def print_cards(cards):
@@ -236,8 +265,8 @@ def print_cards(cards):
     return s
 
 
-def create_entity(money=0, dealer=False):
-    entity = Dealer(None) if dealer else Player(money)
+def create_entity(money, dealer=False):
+    entity = Dealer(money) if dealer else Player(money)
     for i in range(STARTING_CARDS):
         entity.hit()
     if dealer:
@@ -251,25 +280,40 @@ def print_stats(players):
 
 def get_bet(max: int) -> int:
     while True:
-        bet = input('How much do you want to bet?\n> ')
+        bet = input('How much do you want to bet? (Q to quit)\n> ')
+        if bet.upper() == 'Q':
+            return None
         try:
             bet = int(bet)
         except ValueError:
-            pass
+            print("Invalid")
         else:
             if bet > 0 and bet <= max:
                 return bet
+            print("Not enough money")
             
 
-def find_winner(players):
-    total_points = []
+def find_loser(players):
     for p in players:
-        total_points.append(players[p].total_points)
         if players[p].lose:
-            return p
+            return None
     
-    max_points = max(players, key=lambda p: players[p].total_points)
-    return max_points
+    loser = min(players, key=lambda p: players[p].total_points)
+    players[loser].lose = True
+
+def finishing_game(players, bet):
+    #TODO add draw features
+    for p in players:
+        print(players[p].money)
+        print(players[p].lose)
+        if players[p].lose:
+            if p != 'dealer':
+                players[p].money -= players[p].bet
+        else:
+            if p != 'dealer':
+                players[p].money += players[p].bet
+            print(f'WINNER: {p.capitalize()}')
+
 
 
 if __name__ == "__main__":
