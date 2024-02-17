@@ -18,7 +18,7 @@ class Deck():
                 point = 0
                 if i == 12:
                     point = (1, 11)
-                elif i > 9:
+                elif i > 8:
                     point = 10
                 else:
                     point = i + 2
