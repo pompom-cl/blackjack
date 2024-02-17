@@ -302,17 +302,24 @@ def find_loser(players):
     players[loser].lose = True
 
 def finishing_game(players, bet):
-    #TODO add draw features
+    draw = True
+    draw_point = players['dealer']
     for p in players:
-        print(players[p].money)
-        print(players[p].lose)
-        if players[p].lose:
-            if p != 'dealer':
-                players[p].money -= players[p].bet
-        else:
-            if p != 'dealer':
-                players[p].money += players[p].bet
-            print(f'WINNER: {p.capitalize()}')
+        if draw_point != players[p]:
+            draw = False
+    if draw:
+        print("DRAW")
+    else:
+        for p in players:
+            print(players[p].money)
+            print(players[p].lose)
+            if players[p].lose:
+                if p != 'dealer':
+                    players[p].money -= players[p].bet
+            else:
+                if p != 'dealer':
+                    players[p].money += players[p].bet
+                print(f'WINNER: {p.capitalize()}')
 
 
 
