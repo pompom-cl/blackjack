@@ -3,6 +3,7 @@ import random
 SUITS = (chr(9829), chr(9830), chr(9824), chr(9827)) # '♥'.'♦'.'♠'.'♣'
 RANKS = list(range(2, 11)) + ['J', 'Q', 'K', 'A']
 STARTING_CARDS = 2
+POINTS = 21
 
 class Deck():
     cards = []

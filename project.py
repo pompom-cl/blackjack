@@ -1,14 +1,15 @@
 import argparse, time, blackjack
 
 STARTING_CARDS = 2
-POINTS = 21
+DEFAULT_MONEY = 1000
 
 def main():
     parser = argparse.ArgumentParser(prog='blackjack', description='A gambling game')
-    parser.add_argument('-m', '--money', default=1000, help='player\'s (and dealer)\'s starting money', type=int)
+    parser.add_argument('-m', '--money', default=DEFAULT_MONEY, help='player\'s (and dealer)\'s starting money', type=int)
     args = parser.parse_args()
     money = args.money
 
+    # TODO Change this
     print('Welcome to Blackjack (inspired by Al Sweigart)')
     print('''
     Rules:
@@ -39,7 +40,7 @@ def main():
 
         players = {'player': player, 'dealer': dealer}
         bet = get_bet(player.money)
-        if bet == None:
+        if bet == -1:
             print(f"You brought home {player.money}")
             break
         for p in players:
@@ -51,9 +52,9 @@ def main():
                 time.sleep(0.5)
                 players[p].get_action()
                 time.sleep(0.5)
-                print_stats({'player': player, 'dealer': dealer})
+                print(print_stats({'player': player, 'dealer': dealer}))
                 
-                if players[p].total_points > POINTS:
+                if players[p].total_points > blackjack.POINTS:
                     players[p].stand()
                     players[p].lose = True
 
@@ -68,9 +69,11 @@ def main():
 
 
 def print_cards(cards):
-    if len(cards) == 1:
+    if not cards:
+        return ''
+    elif len(cards) == 1:
         return str(cards[0])
-    s = str()
+    s = ''
     card1 = str(cards[0]).split('\n')
     card2 = print_cards(cards[1:]).split('\n')
     for i in range(len(card1)):
@@ -78,18 +81,20 @@ def print_cards(cards):
     return s
 
 
-def create_entity(money, dealer=False):
-    entity = blackjack.Dealer(money) if dealer else blackjack.Player(money)
-    for i in range(STARTING_CARDS):
-        entity.hit()
-    if dealer:
-        entity.cards[0].hide = True
-    return entity
+# def create_entity(money, dealer=False):
+#     entity = blackjack.Dealer(money) if dealer else blackjack.Player(money)
+#     for i in range(STARTING_CARDS):
+#         entity.hit()
+#     if dealer:
+#         entity.cards[0].hide = True
+#     return entity
 
 def print_stats(players):
+    s = ''
     for player in players:
-        print(f"{player.upper()}: {players[player].total_points}")
-        print(print_cards(players[player].cards))
+        s += f"{player.upper()}: {players[player].total_points}\n"
+        s += f"{print_cards(players[player].cards)}\n"
+    return s
 
 def get_bet(max: int) -> int:
     while True:
@@ -107,25 +112,21 @@ def get_bet(max: int) -> int:
             
 
 def find_loser(players):
+    if players['player'].total_points == players['dealer'].total_points:
+        return -1
     for p in players:
         if players[p].lose:
-            return None
+            return 0
     
     loser = min(players, key=lambda p: players[p].total_points)
     players[loser].lose = True
 
+
 def finishing_game(players, bet):
-    draw = True
-    draw_point = players['dealer']
-    for p in players:
-        if draw_point != players[p]:
-            draw = False
-    if draw:
+    if find_loser(players) == -1:
         print("DRAW")
     else:
         for p in players:
-            print(players[p].money)
-            print(players[p].lose)
             if players[p].lose:
                 if p != 'dealer':
                     players[p].money -= players[p].bet
@@ -133,6 +134,7 @@ def finishing_game(players, bet):
                 if p != 'dealer':
                     players[p].money += players[p].bet
                 print(f'WINNER: {p.capitalize()}')
+
 
 
 
