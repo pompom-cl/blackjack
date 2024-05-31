@@ -36,17 +36,17 @@ def main():
         dealer.new_game()
         print(f"\nGAME {game}")
 
-        print(f"MONEY: {player.money}\n")
+        print(f"MONEY: ${player.money}\n")
 
         players = {'player': player, 'dealer': dealer}
         bet = get_bet(player.money)
         if bet == -1:
-            print(f"You brought home {player.money}")
+            print(f"You have ${player.money}")
             break
         for p in players:
             players[p].bet = bet
             players[p].turn = True
-            print_stats({'player': player, 'dealer': dealer})
+            print(print_stats({'player': player, 'dealer': dealer}))
             while players[p].turn:
                 print(f"{p.upper()} TURNS:")
                 time.sleep(0.5)
@@ -58,14 +58,13 @@ def main():
                     players[p].stand()
                     players[p].lose = True
 
-        find_loser(players)
-        finishing_game(players, bet)
+        print(finishing_game(players))
         if player.money <= 0:
-            print("You run out of money to bet!")
+            print("You ran out of money to bet!")
             break
         game += 1
 
-    print("Thank You For Playing!")
+    print("Thank you for playing!")
 
 
 def print_cards(cards):
@@ -81,14 +80,6 @@ def print_cards(cards):
     return s
 
 
-# def create_entity(money, dealer=False):
-#     entity = blackjack.Dealer(money) if dealer else blackjack.Player(money)
-#     for i in range(STARTING_CARDS):
-#         entity.hit()
-#     if dealer:
-#         entity.cards[0].hide = True
-#     return entity
-
 def print_stats(players):
     s = ''
     for player in players:
@@ -100,7 +91,7 @@ def get_bet(max: int) -> int:
     while True:
         bet = input('How much do you want to bet? (Q to quit)\n> ')
         if bet.upper() == 'Q':
-            return None
+            return -1
         try:
             bet = int(bet)
         except ValueError:
@@ -112,30 +103,34 @@ def get_bet(max: int) -> int:
             
 
 def find_loser(players):
-    if players['player'].total_points == players['dealer'].total_points:
+    if players['player'].total_points == players['dealer'].total_points or players['player'].lose == True and players['dealer'].lose == True:
         return -1
     for p in players:
         if players[p].lose:
             return 0
-    
     loser = min(players, key=lambda p: players[p].total_points)
     players[loser].lose = True
+    return 0
 
 
-def finishing_game(players, bet):
+def finishing_game(players):
     if find_loser(players) == -1:
-        print("DRAW")
+        return "DRAW"
     else:
-        for p in players:
-            if players[p].lose:
-                if p != 'dealer':
-                    players[p].money -= players[p].bet
-            else:
-                if p != 'dealer':
-                    players[p].money += players[p].bet
-                print(f'WINNER: {p.capitalize()}')
-
-
+        # for p in players:
+        #     if players[p].lose:
+        #         if p != 'dealer':
+        #             players[p].money -= players[p].bet
+        #     else:
+        #         if p != 'dealer':
+        #             players[p].money += players[p].bet
+        #         return f'WINNER: {p.capitalize()}'
+        if players['player'].lose:
+            players['player'].money -= players['player'].bet
+            return f'WINNER: Dealer'
+        elif players['dealer'].lose:
+            players['player'].money += players['player'].bet
+            return f'WINNER: Player'
 
 
 if __name__ == "__main__":

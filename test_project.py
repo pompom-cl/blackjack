@@ -34,25 +34,70 @@ def test_get_bet(monkeypatch):
 
 
 def test_find_loser():
+    reset_stats()
     assert player.total_points == 2
     assert dealer.total_points == 2
     assert project.find_loser({'dealer': dealer, 'player': player}) == -1
     assert player.lose is False
     assert dealer.lose is False
+    
+    reset_stats()
     player.hit()
     assert player.total_points == 4
     assert dealer.total_points == 2
     project.find_loser({'dealer': dealer, 'player': player})
     assert player.lose is False
     assert dealer.lose is True
+    
+    reset_stats()
     dealer.hit()
     assert player.total_points == 4
     assert dealer.total_points == 4
     assert project.find_loser({'dealer': dealer, 'player': player}) == -1
-    # TODO FIX this
     assert player.lose is False
     assert dealer.lose is False
+    
+    reset_stats()
+    dealer.hit()
+    assert player.total_points == 4
+    assert dealer.total_points == 7
+    project.find_loser({'dealer': dealer, 'player': player})
+    assert player.lose is True
+    assert dealer.lose is False
+
 
 def test_finishing_game():
-    ...
-    # TODO
+    reset_stats()
+    player.bet = 10
+    assert player.total_points == 4
+    assert dealer.total_points == 7
+    assert project.finishing_game({'dealer': dealer, 'player': player}) == 'WINNER: Dealer'
+    assert player.lose is True
+    assert dealer.lose is False
+    assert player.money == 90
+
+    reset_stats()
+    player.hit()
+    assert player.total_points == 7
+    assert dealer.total_points == 7
+    assert project.finishing_game({'dealer': dealer, 'player': player}) == 'DRAW'
+    assert player.money == 90
+
+    
+    reset_stats()
+    player.bet = 110
+    player.hit()
+    player.hit()
+    player.hit()
+    player.hit()
+    assert player.total_points == 21
+    assert dealer.total_points == 7
+    assert project.finishing_game({'dealer': dealer, 'player': player}) == 'WINNER: Player'
+    assert player.money == 200
+
+
+
+
+def reset_stats():
+    player.lose = False
+    dealer.lose = False
