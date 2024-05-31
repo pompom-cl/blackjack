@@ -10,20 +10,16 @@ def main():
     money = args.money
 
     # TODO Change this
-    print('Welcome to Blackjack (inspired by Al Sweigart)')
-    print('''
-    Rules:
-        Try to get as close to 21 without going over.
-        Kings, Queens, and Jacks are worth 10 points.
-        Aces are worth 1 or 11 points.
-        Cards 2 through 10 are worth their face value.
-        (H)it to take another card.
-        (S)tand to stop taking cards.
-        On your first play, you can (D)ouble down to increase your bet
-        but must hit exactly one more time before standing.
-        In case of a tie, the bet is returned to the player.
-        The dealer stops hitting at 17.
-    ''')
+    print('Welcome to Blackjack')
+    print('Try to get as close to 21 points as possible without going over.')
+    print('Kings, Queens, Jacks are worth as 10 points.')
+    print('Number cards (2 through 10) are worth their numeric value.')
+    print('Aces can be worth either 1 point or 11 points, depending on which helps your hand more.')
+    print('''ACTIONS:
+    (H)it: Draw another card to add to your total.
+    (S)tand: Keep your current hand and end your turn.
+    (D)ouble Down: On your first turn, you can double your initial bet, but you must draw exactly one more card before standing.
+''')
     blackjack.Deck.generate_deck()
     player = blackjack.Player(money)
     dealer = blackjack.Dealer(None)
@@ -41,7 +37,7 @@ def main():
         players = {'player': player, 'dealer': dealer}
         bet = get_bet(player.money)
         if bet == -1:
-            print(f"You have ${player.money}")
+            print(f"You're bringing ${player.money}.")
             break
         for p in players:
             players[p].bet = bet
