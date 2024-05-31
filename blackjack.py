@@ -163,8 +163,8 @@ class Dealer(Entity):
         point_3 = random.randint(18, 19)
         
         if self.total_points < point_1:
-            actions['hit'] = 1
-            actions['stand'] = 0
+            actions['hit'] = 0.99
+            actions['stand'] = 0.09
         elif self.total_points < point_2:
             actions['hit'] = 0.63
             actions['stand'] = 0.37
