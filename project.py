@@ -83,7 +83,7 @@ def print_stats(players):
         s += f"{print_cards(players[player].cards)}\n"
     return s
 
-def get_bet(max: int) -> int:
+def get_bet(max):
     while True:
         bet = input('How much do you want to bet? (Q to quit)\n> ')
         if bet.upper() == 'Q':

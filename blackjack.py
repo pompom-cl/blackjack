@@ -140,7 +140,6 @@ class Player(Entity):
                 case _:
                     print("Invalid action!")
 
-
     def double(self):
         self.bet *= 2
         self.hit()
