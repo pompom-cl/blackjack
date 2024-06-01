@@ -29,7 +29,7 @@ This project is a simple implementation of a command-line Blackjack game, where 
 ## Index
 | Filename | Description |
 | --- | --- |
-| `project.py` | Contains main function and other functions, which handles the game loop, player and dealer actions, betting system, and game outcomes. |
+| [project.py](https://github.com/pompom-cl/blackjack/blob/main/README.md#projectpy) | Contains main function and other functions, which handles the game loop, player and dealer actions, betting system, and game outcomes. |
 | `blackjack.py` | Contains the abstractions of the Blackjack game, including the Deck, Card, Player, and Dealer classes. |
 | `test_project.py` | Contains all test functions for all functions in `project.py` |
 | `requirements.txt` | Contains all of the required libraries |
