@@ -33,6 +33,7 @@ class Deck():
     @classmethod
     def reset(cls):
         cls.cards.extend(cls.removed_cards)
+        cls.removed_cards = []
         for card in cls.cards:
             card.hide = False
         cls.shuffle()
@@ -43,6 +44,7 @@ class Card():
         self.pair = pair
         self.point = point
         self.hide = False
+        
     def __str__(self):
         if self.hide:
              return f''' ___  

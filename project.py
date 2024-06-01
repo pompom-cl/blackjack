@@ -9,7 +9,6 @@ def main():
     args = parser.parse_args()
     money = args.money
 
-    # TODO Change this
     print('Welcome to Blackjack')
     print('Try to get as close to 21 points as possible without going over.')
     print('Kings, Queens, Jacks are worth as 10 points.')

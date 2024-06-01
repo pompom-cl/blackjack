@@ -25,6 +25,23 @@ This project is a simple implementation of a command-line Blackjack game, where 
 - random [docs](https://docs.python.org/3/library/random.html)
 - time [docs](https://docs.python.org/3/library/time.html)
 
+## How to run
+
+1. Make sure you have Python installed.
+1. Make sure you have met of the [requirements](https://github.com/pompom-cl/blackjack/blob/main/requirements.txt)
+1. Download or clone the project files.
+    ``` sh
+    git clone https://github.com/pompom-cl/blackjack.git
+    ```
+1. Run the game with the command
+    ``` sh
+    python project.py
+    ```
+    or with `-m` or `--money` argument for how much money you want to start with. If not specified, the default starting money is $1000.
+    ``` sh
+    python project.py -m 2000
+    ```
+
 
 ## Index
 | Filename | Description |
@@ -38,22 +55,12 @@ This project is a simple implementation of a command-line Blackjack game, where 
 
 | Function | Description |
 | --- | --- |
-| `main()` |  |
-| `print_cards(cards)` |  |
-| `print_stats(players)` |  |
-| `get_bet(max)` |  |
-| `find_loser(players)` |  |
-| `finishing_game(players)` |  |
-
-### test_project.py
-
-| Function | Description |
-| --- | --- |
-| `test_print_cards()` |  |
-| `test_print_stats()` |  |
-| `test_get_bet()` |  |
-| `test_find_loser()` |  |
-| `test_finishing_game()` |  |
+| `main()` | Function: Parsing arguments; printing command-line UI; main game loop |
+| `print_cards(cards)` | Recursive function to print cards horizontally |
+| `print_stats(players)` | Print player's and dealer's total points and hand (by calling print_cards function) |
+| `get_bet(max)` | Ask bet (input) from the user |
+| `find_loser(players)` | Change player's or dealer's lose attribute accordingly. Return -1 if there's no winner |
+| `finishing_game(players)` | Print draw if draw, otherwise, print the winner |
 
 ### blackjack.py
 
@@ -61,31 +68,31 @@ This project is a simple implementation of a command-line Blackjack game, where 
 
 | Class method | Description |
 | --- | --- |
-| `generate_deck(cls)` |  |
-| `shuffle(cls)` |  |
-| `deal(cls)` |  |
-| `reset(cls)` |  |
+| `generate_deck(cls)` | Generates all cards and add to the stack |
+| `shuffle(cls)` | Shuffles cards using random library |
+| `deal(cls)` | Adds topmost card to the removed_cards |
+| `reset(cls)` | Adds all removed_cards to cards stack, removed all removed_cards, reset card's hide attribute to False, and shuffle the stack |
 
 #### class Card()
 
 | Attribute | Description |
 | --- | --- |
-| `self.pair` |  |
-| `self.point` |  |
-| `self.hide` |  |
+| `self.pair` | Tuple to identify the rank and suit |
+| `self.point` | Point of the card |
+| `self.hide` | The card cannot be seen if this attribute is True |
 
 
 | Method | Description |
 | --- | --- |
-| `__init__(self, pair, point)` |  |
-| `__str__(self)` |  |
+| `__init__(self, pair, point)` | Initialization |
+| `__str__(self)` | Returns the string representation of the card |
 
 #### class Entity()
 
 | Attribute | Description |
 | --- | --- |
-| `self.cards` |  |
-| `self.total_points` |  |
+| `self.cards` | Entity's hand |
+| `self.total_points` | Entity's total points |
 | `self.actions` |  |
 | `self.hidden` |  |
 | `self.turn` |  |
@@ -97,25 +104,25 @@ This project is a simple implementation of a command-line Blackjack game, where 
 | Method | Description |
 | --- | --- |
 | `__init__(self, money)` |  |
-| `hit(self)` |  |
-| `stand(self)` |  |
-| `calculate_points(self)` |  |
+| `hit(self)` | Draws a card |
+| `stand(self)` | Ends the turn |
+| `calculate_points(self)` | Calculates the total points of the entity's hand |
 
 #### class Player(Entity)
 
 | Method | Description |
 | --- | --- |
-| `new_game(self)` |  |
-| `get_action(self)` |  |
+| `new_game(self)` | Resets the player's state for a new game |
+| `get_action(self)` | Prompts the player to take an actions |
 | `double(self)` |  |
 
 #### class Dealer(Entity)
 
 | Method | Description |
 | --- | --- |
-| `new_game(self)` |  |
-| `get_action(self)` |  |
-| `unhide(self)` |  |
+| `new_game(self)` | Resets the dealer's state for a new game |
+| `get_action(self)` | Determines the dealer's action based on the current total_points |
+| `unhide(self)` | Unhides the dealer's hidden card |
 
 ## About Me
 
