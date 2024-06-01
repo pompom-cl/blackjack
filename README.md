@@ -1,7 +1,6 @@
 # Blackjack
 #### Video Demo:  <URL HERE>
-#### Description:
-Simple implementation of a command-line Blackjack game.
+#### Description: Simple implementation of a command-line Blackjack game.
 
 ## What is this?
 my cs50p final project's repository.
