@@ -32,7 +32,7 @@ class Deck():
         
     @classmethod
     def reset(cls):
-        cls.cards += cls.removed_cards
+        cls.cards.extend(cls.removed_cards)
         for card in cls.cards:
             card.hide = False
         cls.shuffle()
