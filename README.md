@@ -28,7 +28,7 @@ This project is a simple implementation of a command-line Blackjack game, where 
 ## How to run
 
 1. Make sure you have Python installed.
-1. Make sure you have met of the [requirements](https://github.com/pompom-cl/blackjack/blob/main/requirements.txt)
+1. Make sure you have met all of the [requirements](https://github.com/pompom-cl/blackjack/blob/main/requirements.txt)
 1. Download or clone the project files.
     ``` sh
     git clone https://github.com/pompom-cl/blackjack.git
