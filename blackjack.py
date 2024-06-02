@@ -167,11 +167,11 @@ class Dealer(Entity):
             actions['hit'] = 1
             actions['stand'] = 0
         elif self.total_points < point_2:
-            actions['hit'] = 0.80
-            actions['stand'] = 0.20
+            actions['hit'] = 0.70
+            actions['stand'] = 0.30
         elif self.total_points < point_3:
-            actions['hit'] = 0.20
-            actions['stand'] = 0.80
+            actions['hit'] = 0.15
+            actions['stand'] = 0.85
         else:
             actions['hit'] = 0
             actions['stand'] = 1
