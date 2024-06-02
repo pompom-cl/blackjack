@@ -164,17 +164,17 @@ class Dealer(Entity):
         point_3 = random.randint(18, 19)
         
         if self.total_points < point_1:
-            actions['hit'] = 0.99
-            actions['stand'] = 0.09
+            actions['hit'] = 1
+            actions['stand'] = 0
         elif self.total_points < point_2:
-            actions['hit'] = 0.63
-            actions['stand'] = 0.37
+            actions['hit'] = 0.80
+            actions['stand'] = 0.20
         elif self.total_points < point_3:
-            actions['hit'] = 0.27
-            actions['stand'] = 0.73
+            actions['hit'] = 0.20
+            actions['stand'] = 0.80
         else:
-            actions['hit'] = 0.09
-            actions['stand'] = 0.99
+            actions['hit'] = 0
+            actions['stand'] = 1
         action = random.choices(list(actions.keys()), list(actions.values()), k=1)[0]
         print(action)
         match action:
