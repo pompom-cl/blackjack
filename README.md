@@ -114,7 +114,7 @@ This project is a simple implementation of a command-line Blackjack game, where 
 | --- | --- |
 | `new_game(self)` | Resets the player's state for a new game |
 | `get_action(self)` | Prompts the player to take an actions |
-| `double(self)` |  |
+| `double(self)` | Doubles the bet, draws a card, ends the turn |
 
 #### class Dealer(Entity)
 
