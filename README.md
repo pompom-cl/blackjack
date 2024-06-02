@@ -93,12 +93,12 @@ This project is a simple implementation of a command-line Blackjack game, where 
 | --- | --- |
 | `self.cards` | Entity's hand |
 | `self.total_points` | Entity's total points |
-| `self.actions` |  |
-| `self.hidden` |  |
-| `self.turn` |  |
-| `self.bet` |  |
-| `self.lose` |  |
-| `self.money` |  |
+| `self.actions` | Entity's actions in one game |
+| `self.hidden` | Determines if entity has any hidden cards |
+| `self.turn` | Determines entity's turn in game |
+| `self.bet` | Entity's bet for the game (player) |
+| `self.lose` | Determines if entity is losing |
+| `self.money` | Entity's total money |
 
 
 | Method | Description |
