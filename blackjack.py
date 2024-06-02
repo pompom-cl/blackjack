@@ -25,11 +25,11 @@ class Deck():
     @classmethod
     def shuffle(cls):
         random.shuffle(cls.cards)
-        
+
     @classmethod
     def deal(cls):
         cls.removed_cards.append(cls.cards.pop(0))
-        
+
     @classmethod
     def reset(cls):
         cls.cards.extend(cls.removed_cards)
@@ -37,29 +37,23 @@ class Deck():
         for card in cls.cards:
             card.hide = False
         cls.shuffle()
-        
+
 
 class Card():
     def __init__(self, pair: tuple, point):
         self.pair = pair
         self.point = point
         self.hide = False
-        
+
     def __str__(self):
         if self.hide:
-             return f''' ___  
-|## | 
-|###| 
-|_##| '''
-        return f''' ___  
-|{str(self.pair[1]).ljust(2)} | 
-| {self.pair[0]} | 
-|_{str(self.pair[1]).rjust(2, '_')}| '''
-    
+             return f" ___  \n|## | \n|###| \n|_##| "
+        return f" ___  \n|{str(self.pair[1]).ljust(2)} | \n| {self.pair[0]} | \n|_{str(self.pair[1]).rjust(2, '_')}| "
+
     @property
     def pair(self):
         return self._pair
-    
+
     @pair.setter
     def pair(self, pair):
         if pair[0] in SUITS and pair[1] in RANKS:
@@ -97,15 +91,15 @@ class Entity():
                     points[n] += 1 if n == 0 else 11
                 else:
                     points[n] += self.cards[i].point
-        max_point =max(points) 
+        max_point =max(points)
         return max_point if max_point < POINTS else min(points)
-    
+
     @property
     def total_points(self):
         if self.hidden:
             return '??'
         return self.calculate_points()
-    
+
     @property
     def hidden(self):
         for card in self.cards:
@@ -159,19 +153,19 @@ class Dealer(Entity):
     def get_action(self):
         self.unhide()
         actions = {}
-        point_1 = 11 # hit
-        point_2 = random.randint(14, 15)
-        point_3 = random.randint(18, 19)
-        
+        point_1 = 11
+        point_2 = random.randint(13, 15)
+        point_3 = random.randint(16, 18)
+
         if self.total_points < point_1:
             actions['hit'] = 1
             actions['stand'] = 0
         elif self.total_points < point_2:
-            actions['hit'] = 0.70
-            actions['stand'] = 0.30
+            actions['hit'] = 0.80
+            actions['stand'] = 0.20
         elif self.total_points < point_3:
-            actions['hit'] = 0.15
-            actions['stand'] = 0.85
+            actions['hit'] = 0.05
+            actions['stand'] = 0.95
         else:
             actions['hit'] = 0
             actions['stand'] = 1

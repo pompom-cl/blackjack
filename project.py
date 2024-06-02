@@ -35,20 +35,20 @@ def main():
 
         players = {'player': player, 'dealer': dealer}
         bet = get_bet(player.money)
+        print(print_stats({'player': player, 'dealer': dealer}))
         if bet == -1:
             print(f"You're bringing ${player.money}.")
             break
         for p in players:
             players[p].bet = bet
             players[p].turn = True
-            print(print_stats({'player': player, 'dealer': dealer}))
             while players[p].turn:
                 print(f"{p.upper()} TURNS:")
                 time.sleep(0.5)
                 players[p].get_action()
                 time.sleep(0.5)
                 print(print_stats({'player': player, 'dealer': dealer}))
-                
+
                 if players[p].total_points > blackjack.POINTS:
                     players[p].stand()
                     players[p].lose = True
@@ -95,7 +95,7 @@ def get_bet(max):
             if bet > 0 and bet <= max:
                 return bet
             print("Not enough money")
-            
+
 
 def find_loser(players):
     if players['player'].total_points == players['dealer'].total_points or players['player'].lose == True and players['dealer'].lose == True:
@@ -112,14 +112,6 @@ def finishing_game(players):
     if find_loser(players) == -1:
         return "DRAW"
     else:
-        # for p in players:
-        #     if players[p].lose:
-        #         if p != 'dealer':
-        #             players[p].money -= players[p].bet
-        #     else:
-        #         if p != 'dealer':
-        #             players[p].money += players[p].bet
-        #         return f'WINNER: {p.capitalize()}'
         if players['player'].lose:
             players['player'].money -= players['player'].bet
             return f'WINNER: Dealer'
