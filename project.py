@@ -9,7 +9,7 @@ def main():
     args = parser.parse_args()
     money = args.money
 
-    print('Welcome to Blackjack')
+    print('Welcome to Blackjack (inspired by Al Sweigart)')
     print('Try to get as close to 21 points as possible without going over.')
     print('Kings, Queens, Jacks are worth as 10 points.')
     print('Number cards (2 through 10) are worth their numeric value.')
